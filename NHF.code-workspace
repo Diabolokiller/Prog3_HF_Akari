@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.fontSize": 12,
+		"editor.cursorSmoothCaretAnimation": "on",
+		"editor.cursorWidth": 3,
+		"editor.find.cursorMoveOnType": true,
+		"editor.minimap.enabled": false,
+		"editor.renderWhitespace": "trailing",
+		"files.trimTrailingWhitespace": true,
+		"terminal.integrated.fontSize": 12,
+		"terminal.integrated.cursorStyle": "line",
+		"terminal.integrated.cursorWidth": 3,
+		"terminal.integrated.cursorBlinking": true,
+		"workbench.externalBrowser": "Brave",
+		"workbench.activityBar.location": "top",
+		"java.configuration.updateBuildConfiguration": "interactive",
+	}
+}

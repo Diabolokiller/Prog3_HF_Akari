@@ -1,0 +1,87 @@
+package edu.hazi.map;
+
+import java.awt.Dimension;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.swing.JPanel;
+
+public class AkariMap {
+    private Cell[][] cells;
+
+    public AkariMap(File mapFile){
+        if(mapFile == null) return;
+        char[][] mapCharMatrix;
+        try {
+            mapCharMatrix = readMap(mapFile);
+            if(mapCharMatrix.length == 0) throw new IndexOutOfBoundsException();
+        } catch(FileNotFoundException e) {
+            System.out.println("File \"" + mapFile.getAbsolutePath() + "\" isn't a map storing file");
+            mapCharMatrix = null;
+            return;
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("File \"" + mapFile.getAbsolutePath() + "\" has incorrect format");
+            mapCharMatrix = null;
+            return;
+        }
+        Dimension size = new Dimension(mapCharMatrix.length, mapCharMatrix[0].length);
+        cells = new Cell[size.width][size.height];
+        for(int x = 0; x < size.width; x++) {
+            for(int y = 0; y < size.height; y++) {
+                cells[x][y] = new Cell();
+                char c = mapCharMatrix[x][y];
+                if(c == '#') cells[x][y].setWall(-1);
+                else if(c != ' ') {
+                    cells[x][y].setWall((Integer.parseInt(((Character) c).toString())));
+                }
+            }
+        }
+        for(int x = 0; x < size.width; x++) {
+            for(int y = 0; y < size.height; y++) {
+                if(x > 0) {
+                    cells[x][y].setLeft(cells[x - 1][y]);
+                    cells[x - 1][y].setRight(cells[x][y]);
+                }
+                if(y > 0) {
+                    cells[x][y].setDown(cells[x][y - 1]);
+                    cells[x][y - 1].setUp(cells[x][y]);
+                }
+            }
+        }
+    }
+
+    public char[][] readMap(File map) throws FileNotFoundException {
+        //TODO: ignore all non-map characters
+        if(!map.getName().endsWith(".txt")) throw new FileNotFoundException();
+        ArrayList<String> readMap = new ArrayList<>();
+        Scanner reader = new Scanner(map);
+        while (reader.hasNextLine()) {
+            readMap.add(reader.nextLine());
+        }
+        reader.close();
+
+        char[][] charMap = new char[readMap.size()][readMap.get(0).length()];
+
+        for(int x = 0; x < charMap.length; x++) {
+            for(int y = 0; y < charMap[0].length; y++) {
+                charMap[x][y] = readMap.get(x).charAt(y);
+            }
+        }
+
+        return charMap;
+    }
+
+    public void addToPanel(JPanel panel) {
+        for(int x = 0; x < cells.length; x++) {
+            for(int y = 0; y < cells[0].length; y++) {
+                panel.add(cells[x][y]);
+            }
+        }
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+}
