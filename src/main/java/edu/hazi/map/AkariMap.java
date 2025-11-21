@@ -3,13 +3,36 @@ package edu.hazi.map;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JPanel;
 
-public class AkariMap {
+public class AkariMap implements Serializable {
     private Cell[][] cells;
+
+    public AkariMap(Dimension size) {
+        cells = new Cell[size.width][size.height];
+        for(int x = 0; x < size.width; x++) {
+            for(int y = 0; y < size.height; y++) {
+                cells[x][y] = new Cell();
+                cells[x][y].setEditable(true);
+            }
+        }
+        for(int x = 0; x < size.width; x++) {
+            for(int y = 0; y < size.height; y++) {
+                if(x > 0) {
+                    cells[x][y].setLeft(cells[x - 1][y]);
+                    cells[x - 1][y].setRight(cells[x][y]);
+                }
+                if(y > 0) {
+                    cells[x][y].setUp(cells[x][y - 1]);
+                    cells[x][y - 1].setDown(cells[x][y]);
+                }
+            }
+        }
+    }
 
     public AkariMap(File mapFile){
         if(mapFile == null) return;
@@ -45,14 +68,14 @@ public class AkariMap {
                     cells[x - 1][y].setRight(cells[x][y]);
                 }
                 if(y > 0) {
-                    cells[x][y].setDown(cells[x][y - 1]);
-                    cells[x][y - 1].setUp(cells[x][y]);
+                    cells[x][y].setUp(cells[x][y - 1]);
+                    cells[x][y - 1].setDown(cells[x][y]);
                 }
             }
         }
     }
 
-    public char[][] readMap(File map) throws FileNotFoundException {
+    private char[][] readMap(File map) throws FileNotFoundException {
         //TODO: ignore all non-map characters
         if(!map.getName().endsWith(".txt")) throw new FileNotFoundException();
         ArrayList<String> readMap = new ArrayList<>();
@@ -71,6 +94,10 @@ public class AkariMap {
         }
 
         return charMap;
+    }
+
+    public void saveMap(String name) {
+        
     }
 
     public void addToPanel(JPanel panel) {

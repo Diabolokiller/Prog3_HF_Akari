@@ -4,6 +4,7 @@ import javax.swing.JButton;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
 public class Cell extends JButton {
     private Cell up;
@@ -13,6 +14,7 @@ public class Cell extends JButton {
     private int lit;
     private int wall;
     private boolean isWall;
+    private boolean isEditable;
 
     private static final int DEFAULT_RGB = 0x000000;
     private static final int DEFAULT_ONCE_LIT_RGB = 0x665555;
@@ -45,12 +47,7 @@ public class Cell extends JButton {
     public Cell (){
         this(null, null, null, null);
     }
-
-    public boolean isLit() { return lit > 0; }
-    public boolean isLight() { return lit == 3; }
-    public boolean isWall() { return isWall; }
-    public int getWall() { return wall; }
-
+    
     public void setWall(int i){
         isWall = true;
         updateBackgroundColor();
@@ -59,16 +56,50 @@ public class Cell extends JButton {
         if(wall != -1)
             setText(Integer.toString(wall));
     }
-
-    public void setUp(Cell c) { up = c;}
-    public void setRight(Cell c) { right = c;}
-    public void setDown(Cell c) { down = c;}
-    public void setLeft(Cell c) { left = c;}
-
+    public void setEditable(boolean editable) { 
+        if(isEditable != editable) {
+            for(ActionListener l : getActionListeners()){
+                removeActionListener(l);
+            }
+            if(editable) {
+                addActionListener((e) -> edit());
+            } else {
+                addActionListener((e) -> lightUp());
+            }
+        }
+        isEditable = editable;
+    }
+    public void setUp(Cell c) { up = c; }
+    public void setRight(Cell c) { right = c; }
+    public void setDown(Cell c) { down = c; }
+    public void setLeft(Cell c) { left = c; }
+    
     public Cell getUp() { return up; }
     public Cell getRight() { return right; }
     public Cell getDown() { return down; }
     public Cell getLeft() { return left; }
+    public boolean isLit() { return lit > 0; }
+    public boolean isLight() { return lit == 3; }
+    public boolean isWall() { return isWall; }
+    public int getWall() { return wall; }
+    
+    private void edit(){
+        if(!isWall) {
+            isWall = true;
+            wall = -1;
+        }
+        else if(isWall()) {
+            wall++;
+            if(wall > 4) {
+                wall = -1;
+                isWall = false;
+                setText("");
+            }
+        }
+        if(wall != -1)
+            setText(Integer.toString(wall));
+        updateBackgroundColor();
+    }
 
     private void updateBackgroundColor() {
         if(isWall()){
