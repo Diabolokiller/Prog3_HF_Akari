@@ -36,7 +36,6 @@ public class Cell extends JButton {
         wall = 0;
         isWall = false;
         addActionListener((e) -> {
-            this.
             lightUp();
         });
         setPreferredSize(new Dimension(50, 50));

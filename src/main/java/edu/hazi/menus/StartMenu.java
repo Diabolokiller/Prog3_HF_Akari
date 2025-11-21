@@ -52,7 +52,11 @@ public class StartMenu implements Menu {
     }
 
     private void editor() {
-
+        frame.getContentPane().removeAll();
+        EditorMenu editorMenu = new EditorMenu();
+        editorMenu.open(frame);
+        frame.revalidate();
+        frame.repaint();
     }
 
     public void close() {

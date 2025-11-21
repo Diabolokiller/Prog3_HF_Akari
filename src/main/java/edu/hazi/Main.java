@@ -10,10 +10,10 @@ public class Main {
     public static void main(String[] args) {
         // Ensure GUI creation runs on the Event Dispatch Thread
         mapDir = new File("./src/main/resources/maps");
-        SwingUtilities.invokeLater(() -> createAndShowGui());
+        SwingUtilities.invokeLater(() -> start());
     }
 
-    private static void createAndShowGui() {
+    private static void start() {
         JFrame frame = new JFrame("Akari");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         StartMenu startMenu = new StartMenu();
