@@ -8,8 +8,6 @@ import javax.swing.*;
 
 public class StartMenu implements Menu {
     JFrame frame;
-    JTextField x;
-    JTextField y;
     File maps;
 
     public void open(JFrame f) {
@@ -42,6 +40,7 @@ public class StartMenu implements Menu {
 
         frame.add(startPanel);
         frame.pack();
+        frame.setLocationRelativeTo(null);
     }
     private void play (File map) {
         frame.getContentPane().removeAll();
@@ -53,7 +52,7 @@ public class StartMenu implements Menu {
 
     private void editor() {
         frame.getContentPane().removeAll();
-        EditorMenu editorMenu = new EditorMenu();
+        EditorMenu editorMenu = new EditorMenu(maps);
         editorMenu.open(frame);
         frame.revalidate();
         frame.repaint();

@@ -2,19 +2,31 @@ package edu.hazi.menus;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import edu.hazi.map.AkariMap;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class EditorMenu implements Menu{
     JFrame frame;
+    AkariMap map;
+    File maps;
+
+    public EditorMenu(File maps) {
+        this.maps = maps;
+    }
 
     @Override
     public void open(JFrame f) {
@@ -42,7 +54,7 @@ public class EditorMenu implements Menu{
     }
 
     private void edit(Dimension size) {
-        AkariMap map = new AkariMap(size);
+        map = new AkariMap(size);
         frame.getContentPane().removeAll();
         
         JPanel editorPanel = new JPanel(new GridLayout(size.width, size.height));
@@ -52,6 +64,7 @@ public class EditorMenu implements Menu{
 
         JPanel buttonPanel = new JPanel();
         JButton saveButton = new JButton("SAVE");
+        saveButton.addActionListener((e) -> save());
         JButton exitButton = new JButton("EXIT");
         exitButton.addActionListener((e) -> close());
         buttonPanel.add(saveButton);
@@ -66,6 +79,41 @@ public class EditorMenu implements Menu{
         frame.revalidate(); 
         frame.repaint();
         frame.pack();
+        frame.setLocationRelativeTo(null);
+    }
+
+    private void save() {
+        JFrame saveFrame = new JFrame();
+        JPanel savePanel = new JPanel(new BorderLayout());
+        saveFrame.add(savePanel);
+
+        JLabel label = new JLabel("Name: ");
+        JTextField name = new JTextField(20);
+        JButton backButton = new JButton("BACK");
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton saveButton = new JButton("SAVE");
+        buttonPanel.add(saveButton);
+        buttonPanel.add(backButton);
+        saveButton.addActionListener((ae) -> {
+            try {
+                map.saveMap(new File(maps, name.getText() + ".txt"));
+            } catch (FileNotFoundException e) {
+                System.out.println("File couldn't be created with that name");
+                return;
+            }
+            saveFrame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            close();
+        });
+        backButton.addActionListener((e) -> {
+            saveFrame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        });
+        savePanel.add(label, BorderLayout.WEST);
+        savePanel.add(name, BorderLayout.EAST);
+        savePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        saveFrame.pack();
+        saveFrame.setLocationRelativeTo(null);
+        saveFrame.setVisible(true);
     }
 
     @Override

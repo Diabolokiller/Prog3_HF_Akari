@@ -3,6 +3,7 @@ package edu.hazi.map;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -96,8 +97,30 @@ public class AkariMap implements Serializable {
         return charMap;
     }
 
-    public void saveMap(String name) {
+    public void saveMap(File map) throws FileNotFoundException {
+        char[][] charMap = new char[cells.length][cells[0].length];
+        for(int x = 0; x < cells.length; x++) {
+            for(int y = 0; y < cells[0].length; y++) {
+                if(cells[x][y].isWall()) {
+                    if(cells[x][y].getWall() != -1){
+                        charMap[x][y] = ((Integer) cells[x][y].getWall()).toString().charAt(0);
+                    } else {
+                        charMap[x][y] = '#';
+                    }
+                } else {
+                    charMap[x][y] = ' ';
+                }
+            }
+        }
+        PrintWriter writer = new PrintWriter(map);
+        for (int x = 0; x < charMap.length; x++) {
+            for (int y = 0; y < charMap[0].length; y++) {
+                writer.print(charMap[x][y]);
+            }
+            if (x < charMap.length - 1) writer.println();
+        }
         
+
     }
 
     public void addToPanel(JPanel panel) {
