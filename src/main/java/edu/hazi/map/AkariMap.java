@@ -98,6 +98,7 @@ public class AkariMap implements Serializable {
     }
 
     public void saveMap(File map) throws FileNotFoundException {
+        PrintWriter writer = new PrintWriter(map);
         char[][] charMap = new char[cells.length][cells[0].length];
         for(int x = 0; x < cells.length; x++) {
             for(int y = 0; y < cells[0].length; y++) {
@@ -112,21 +113,28 @@ public class AkariMap implements Serializable {
                 }
             }
         }
-        PrintWriter writer = new PrintWriter(map);
         for (int x = 0; x < charMap.length; x++) {
             for (int y = 0; y < charMap[0].length; y++) {
                 writer.print(charMap[x][y]);
             }
             if (x < charMap.length - 1) writer.println();
         }
-        
-
+        writer.close();
     }
 
     public void addToPanel(JPanel panel) {
         for(int x = 0; x < cells.length; x++) {
             for(int y = 0; y < cells[0].length; y++) {
                 panel.add(cells[x][y]);
+            }
+        }
+    }
+
+    public void setEditable(boolean editable) {
+        for(Cell[] row : cells) {
+            for(Cell c : row) {
+                c.setEditable(editable);
+                if(c.isLight()) c.lightUp();
             }
         }
     }

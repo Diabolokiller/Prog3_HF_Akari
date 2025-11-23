@@ -63,10 +63,21 @@ public class EditorMenu implements Menu{
         center.add(editorPanel);
 
         JPanel buttonPanel = new JPanel();
+        JButton testButton = new JButton("PLAY");
+        testButton.addActionListener((e) -> {
+            if(testButton.getText().equals("PLAY")){
+                testButton.setText("EDIT");
+                map.setEditable(false);
+            } else {
+                testButton.setText("PLAY");
+                map.setEditable(true);
+            }
+        });
         JButton saveButton = new JButton("SAVE");
         saveButton.addActionListener((e) -> save());
         JButton exitButton = new JButton("EXIT");
         exitButton.addActionListener((e) -> close());
+        buttonPanel.add(testButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(exitButton);
 
