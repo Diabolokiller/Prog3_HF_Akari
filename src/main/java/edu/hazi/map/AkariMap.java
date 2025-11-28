@@ -77,12 +77,22 @@ public class AkariMap implements Serializable {
     }
 
     private char[][] readMap(File map) throws FileNotFoundException {
-        //TODO: ignore all non-map characters
         if(!map.getName().endsWith(".txt")) throw new FileNotFoundException();
         ArrayList<String> readMap = new ArrayList<>();
         Scanner reader = new Scanner(map);
-        while (reader.hasNextLine()) {
-            readMap.add(reader.nextLine());
+        while (reader.hasNext()) {
+            String line = reader.nextLine();
+            String result = "";
+            for(char c : line.toCharArray()){
+                if(c == ' ' || c == '#' || c == '0' || c == '1' || c == '2' || c == '3' || c == '4'){
+                    result += c;
+                }
+                if(!readMap.isEmpty() && result.length() >= readMap.getLast().length()) {
+                    break;
+                }
+            }
+            if(!result.isEmpty() && (readMap.isEmpty() || result.length() == readMap.getLast().length()))
+                readMap.add(result);
         }
         reader.close();
 
@@ -100,6 +110,7 @@ public class AkariMap implements Serializable {
     public void saveMap(File map) throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(map);
         char[][] charMap = new char[cells.length][cells[0].length];
+        setEditable(false);
         for(int x = 0; x < cells.length; x++) {
             for(int y = 0; y < cells[0].length; y++) {
                 if(cells[x][y].isWall()) {

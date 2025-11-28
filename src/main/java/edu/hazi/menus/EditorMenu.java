@@ -13,6 +13,7 @@ import edu.hazi.map.AkariMap;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
@@ -32,9 +33,13 @@ public class EditorMenu implements Menu{
     public void open(JFrame f) {
         frame = f;
         JPanel sizePanel = new JPanel();
+        JLabel xSizeLabel = new JLabel("X: ");
         JSpinner x = new JSpinner(new SpinnerNumberModel(2, 2, 150, 1));
+        JLabel ySizeLabel = new JLabel("Y: ");
         JSpinner y = new JSpinner(new SpinnerNumberModel(2, 2, 150, 1));
+        sizePanel.add(xSizeLabel);
         sizePanel.add(x);
+        sizePanel.add(ySizeLabel);
         sizePanel.add(y);
 
         JPanel buttonPanel = new JPanel();
@@ -45,7 +50,13 @@ public class EditorMenu implements Menu{
         buttonPanel.add(editButton);
         buttonPanel.add(exitButton);
 
+        JLabel editorTitle = new JLabel("Editor");
+        JPanel titlePanel = new JPanel();
+        editorTitle.setFont(editorTitle.getFont().deriveFont(Font.BOLD, 36f));
+        titlePanel.add(editorTitle); 
+
         JPanel outerPanel = new JPanel(new BorderLayout());
+        outerPanel.add(titlePanel, BorderLayout.NORTH);
         outerPanel.add(sizePanel, BorderLayout.CENTER);
         outerPanel.add(buttonPanel, BorderLayout.SOUTH);
         

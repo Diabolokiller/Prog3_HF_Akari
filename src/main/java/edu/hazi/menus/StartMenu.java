@@ -17,7 +17,7 @@ public class StartMenu implements Menu {
     public void open(JFrame f, File dir){
         maps = dir;
         frame = f;
-
+        
         JPanel mapSelectPanel = new JPanel(new FlowLayout());
         JComboBox<String> mapSelect = new JComboBox<>(maps.list());
         mapSelectPanel.add(mapSelect);
@@ -34,7 +34,12 @@ public class StartMenu implements Menu {
         buttonPanel.add(editorButton);
         buttonPanel.add(exitButton);
 
+        // Large title label at the top
+        JLabel title = new JLabel("Akari", SwingConstants.CENTER);
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 48f));
+
         JPanel startPanel = new JPanel(new BorderLayout());
+        startPanel.add(title, BorderLayout.NORTH);
         startPanel.add(buttonPanel, BorderLayout.CENTER);
         startPanel.add(mapSelectPanel, BorderLayout.SOUTH);
 
