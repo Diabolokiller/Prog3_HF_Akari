@@ -23,13 +23,3 @@ public class Main {
         frame.setVisible(true);
     }
 }
-
-/*
- * Kérdések:
- * 
- * Kell több packge?
- * Tesztek kellenek?
- * 
- * invokeLater?
- * 
- */

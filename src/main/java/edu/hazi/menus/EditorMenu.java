@@ -34,9 +34,9 @@ public class EditorMenu implements Menu{
         frame = f;
         JPanel sizePanel = new JPanel();
         JLabel xSizeLabel = new JLabel("X: ");
-        JSpinner x = new JSpinner(new SpinnerNumberModel(2, 2, 150, 1));
+        JSpinner x = new JSpinner(new SpinnerNumberModel(5, 2, 100, 1));
         JLabel ySizeLabel = new JLabel("Y: ");
-        JSpinner y = new JSpinner(new SpinnerNumberModel(2, 2, 150, 1));
+        JSpinner y = new JSpinner(new SpinnerNumberModel(5, 2, 100, 1));
         sizePanel.add(xSizeLabel);
         sizePanel.add(x);
         sizePanel.add(ySizeLabel);
@@ -68,7 +68,7 @@ public class EditorMenu implements Menu{
         map = new AkariMap(size);
         frame.getContentPane().removeAll();
         
-        JPanel editorPanel = new JPanel(new GridLayout(size.width, size.height));
+        JPanel editorPanel = new JPanel(new GridLayout(size.height, size.width));
         map.addToPanel(editorPanel);
         JPanel center = new JPanel(new GridBagLayout());
         center.add(editorPanel);

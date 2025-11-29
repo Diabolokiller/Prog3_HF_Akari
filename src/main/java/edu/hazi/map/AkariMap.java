@@ -3,10 +3,13 @@ package edu.hazi.map;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -15,8 +18,8 @@ public class AkariMap implements Serializable {
 
     public AkariMap(Dimension size) {
         cells = new Cell[size.width][size.height];
-        for(int x = 0; x < size.width; x++) {
-            for(int y = 0; y < size.height; y++) {
+        for(int y = 0; y < size.height; y++) {
+            for(int x = 0; x < size.width; x++) {
                 cells[x][y] = new Cell();
                 cells[x][y].setEditable(true);
             }
@@ -41,7 +44,7 @@ public class AkariMap implements Serializable {
         try {
             mapCharMatrix = readMap(mapFile);
             if(mapCharMatrix.length == 0) throw new IndexOutOfBoundsException();
-        } catch(FileNotFoundException e) {
+        } catch(IOException e) {
             System.out.println("File \"" + mapFile.getAbsolutePath() + "\" isn't a map storing file");
             mapCharMatrix = null;
             return;
@@ -76,12 +79,11 @@ public class AkariMap implements Serializable {
         }
     }
 
-    private char[][] readMap(File map) throws FileNotFoundException {
+    private char[][] readMap(File map) throws IOException {
         if(!map.getName().endsWith(".txt")) throw new FileNotFoundException();
         ArrayList<String> readMap = new ArrayList<>();
-        Scanner reader = new Scanner(map);
-        while (reader.hasNext()) {
-            String line = reader.nextLine();
+        List<String> lines = Files.readAllLines(Path.of(map.getAbsolutePath()));
+        for(String line : lines) {
             String result = "";
             for(char c : line.toCharArray()){
                 if(c == ' ' || c == '#' || c == '0' || c == '1' || c == '2' || c == '3' || c == '4'){
@@ -94,13 +96,12 @@ public class AkariMap implements Serializable {
             if(!result.isEmpty() && (readMap.isEmpty() || result.length() == readMap.getLast().length()))
                 readMap.add(result);
         }
-        reader.close();
 
-        char[][] charMap = new char[readMap.size()][readMap.get(0).length()];
+        char[][] charMap = new char[readMap.get(0).length()][readMap.size()];
 
         for(int x = 0; x < charMap.length; x++) {
             for(int y = 0; y < charMap[0].length; y++) {
-                charMap[x][y] = readMap.get(x).charAt(y);
+                charMap[x][y] = readMap.get(y).charAt(x);
             }
         }
 
@@ -134,8 +135,8 @@ public class AkariMap implements Serializable {
     }
 
     public void addToPanel(JPanel panel) {
-        for(int x = 0; x < cells.length; x++) {
-            for(int y = 0; y < cells[0].length; y++) {
+        for(int y = 0; y < cells[0].length; y++) {
+            for(int x = 0; x < cells.length; x++) {
                 panel.add(cells[x][y]);
             }
         }
@@ -148,6 +149,15 @@ public class AkariMap implements Serializable {
                 if(c.isLight()) c.lightUp();
             }
         }
+    }
+
+    public boolean isComplete() {
+        for(Cell[] row : cells) {
+            for(Cell c : row) {
+                if(!((c.isWall() && c.getWall() <= 0) || c.isLit())) return false;
+            }
+        }
+        return true;
     }
 
     public Cell[][] getCells() {

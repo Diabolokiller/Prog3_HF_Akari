@@ -22,7 +22,7 @@ public class PlayMenu implements Menu{
         map = new AkariMap(mapDir);
         JPanel playingPanel;
         try {
-            playingPanel = new JPanel(new GridLayout(map.getCells().length, map.getCells()[0].length, 0, 0));
+            playingPanel = new JPanel(new GridLayout(map.getCells()[0].length, map.getCells().length, 0, 0));
         } catch (NullPointerException e) {
             close();
             return;
@@ -60,11 +60,7 @@ public class PlayMenu implements Menu{
     }
 
     public void checkWinCondition() {
-        for(Cell[] row : map.getCells()) {
-            for(Cell c : row) {
-                if(!((c.isWall() && c.getWall() <= 0) || c.isLit())) return;
-            }
-        }
-        close();
+        if(map.isComplete())
+            close();
     }
 }
