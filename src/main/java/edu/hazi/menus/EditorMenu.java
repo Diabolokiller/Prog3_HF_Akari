@@ -20,15 +20,30 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+ * Editor menu which allows creating and saving custom maps. Provides a size
+ * selector, an editor grid for placing walls, and save functionality.
+ */
 public class EditorMenu implements Menu{
-    JFrame frame;
-    AkariMap map;
-    File maps;
+    private JFrame frame;
+    private AkariMap map;
+    private File maps;
 
+    /**
+     * Create an EditorMenu that will save maps into the provided directory.
+     *
+     * @param maps the directory where created maps will be stored
+     */
     public EditorMenu(File maps) {
         this.maps = maps;
     }
 
+    /**
+     * Open the editor menu UI on the provided frame. Shows size selectors
+     * and options to edit or exit.
+     *
+     * @param f the application frame to host the editor
+     */
     @Override
     public void open(JFrame f) {
         frame = f;
@@ -64,6 +79,12 @@ public class EditorMenu implements Menu{
         frame.pack();
     }
 
+    /**
+     * Create an editor grid of the specified size and allow interactive
+     * toggling of walls. Also includes controls to test (play) or save the map.
+     *
+     * @param size the grid size for the new map (width x height)
+     */
     private void edit(Dimension size) {
         map = new AkariMap(size);
         frame.getContentPane().removeAll();
@@ -104,6 +125,9 @@ public class EditorMenu implements Menu{
         frame.setLocationRelativeTo(null);
     }
 
+    /**
+     * Show a save dialog to name and write the current map to disk.
+     */
     private void save() {
         JFrame saveFrame = new JFrame();
         JPanel savePanel = new JPanel(new BorderLayout());
@@ -138,6 +162,9 @@ public class EditorMenu implements Menu{
         saveFrame.setVisible(true);
     }
 
+    /**
+     * Close the editor and return to the start menu.
+     */
     @Override
     public void close() {
         frame.getContentPane().removeAll();

@@ -13,9 +13,21 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+/**
+ * Model for an Akari puzzle map. Responsible for creating cells either from
+ * a specified size or by loading a text map file, wiring neighbor references,
+ * and providing utility methods to render and save the map.
+ */
 public class AkariMap implements Serializable {
     private Cell[][] cells;
 
+    /**
+     * Construct a new empty map of the given size. All cells are initially
+     * non-wall and editable.
+     * This constructor is primarily used by the map editor.
+     *
+     * @param size the width (x) and height (y) of the map in cells
+     */
     public AkariMap(Dimension size) {
         cells = new Cell[size.width][size.height];
         for(int y = 0; y < size.height; y++) {
@@ -38,6 +50,13 @@ public class AkariMap implements Serializable {
         }
     }
 
+    /**
+     * Construct a map by reading the supplied text file. The file format
+     * uses '#' for unnumbered walls, digits for numbered walls and space for
+     * empty cells.
+     *
+     * @param mapFile the input file containing the map representation
+     */
     public AkariMap(File mapFile){
         if(mapFile == null) return;
         char[][] mapCharMatrix;
@@ -79,6 +98,14 @@ public class AkariMap implements Serializable {
         }
     }
 
+    /**
+     * Read a map file and return a 2D character matrix representing cells.
+     * Only characters ' ', '#', and digits '0'..'4' are read, all other characters are ignored.
+     *
+     * @param map the map file to read
+     * @return a 2D char array where [x][y] addresses the cell at column x and row y
+     * @throws IOException if the file cannot be read
+     */
     private char[][] readMap(File map) throws IOException {
         if(!map.getName().endsWith(".txt")) throw new FileNotFoundException();
         ArrayList<String> readMap = new ArrayList<>();
@@ -108,6 +135,13 @@ public class AkariMap implements Serializable {
         return charMap;
     }
 
+    /**
+     * Save the current map representation into the provided file.
+     * Walls and numbered walls are written using '#' and digits respectively.
+     *
+     * @param map the target file to write
+     * @throws FileNotFoundException if the file cannot be created
+     */
     public void saveMap(File map) throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(map);
         char[][] charMap = new char[cells.length][cells[0].length];
@@ -134,6 +168,12 @@ public class AkariMap implements Serializable {
         writer.close();
     }
 
+    /**
+     * Add all cell components to the provided Swing panel in row-major order
+     * so they render in the intended grid layout.
+     *
+     * @param panel the Swing panel to add cell components to
+     */
     public void addToPanel(JPanel panel) {
         for(int y = 0; y < cells[0].length; y++) {
             for(int x = 0; x < cells.length; x++) {
@@ -142,6 +182,12 @@ public class AkariMap implements Serializable {
         }
     }
 
+    /**
+     * Set whether cells are editable (used by the editor). 
+     * This also turns off any lights that were on to avoid buggy behavior.
+     *
+     * @param editable true to allow editing, false to lock cells
+     */
     public void setEditable(boolean editable) {
         for(Cell[] row : cells) {
             for(Cell c : row) {
@@ -151,6 +197,12 @@ public class AkariMap implements Serializable {
         }
     }
 
+    /**
+     * Check whether the map is complete (every non-wall cell is lit and
+     * all wall-number constraints are satisfied).
+     *
+     * @return true if the puzzle is complete, false otherwise
+     */
     public boolean isComplete() {
         for(Cell[] row : cells) {
             for(Cell c : row) {
@@ -160,6 +212,12 @@ public class AkariMap implements Serializable {
         return true;
     }
 
+    /**
+     * Return the internal cell matrix. The first index is the x/column,
+     * second index is the y/row: {@code cells[x][y]}.
+     *
+     * @return 2D array of {@link Cell}
+     */
     public Cell[][] getCells() {
         return cells;
     }
